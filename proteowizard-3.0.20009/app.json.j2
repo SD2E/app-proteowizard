@@ -2,28 +2,99 @@
   "name": "{{ agave.username }}-{{ app.name }}",
   "version": "{{ app.version }}",
   "executionType": "HPC",
-  "executionSystem": "hpc-tacc-maverick-{{ agave.username }}",
+  "executionSystem": "hpc-tacc-wrangler-{{ agave.username }}",
   "parallelism": "SERIAL",
   "deploymentPath": "{{ agave.username }}/apps/{{ app.bundle }}",
   "deploymentSystem": "data-sd2e-projects-users",
   "defaultProcessorsPerNode": 1,
   "defaultNodeCount": 1,
   "defaultQueue": "normal",
-  "label": "{{ date_time.iso8601_micro }}",
+  "label": "{{ app.name }}",
   "modules": ["load tacc-singularity"],
   "shortDescription": "{{ app.description }}",
   "templatePath": "runner-template.sh",
   "testPath": "tester.sh",
-  "inputs": [],
+  "inputs": [
+  {
+    "id": "raw_file",
+    "value": {
+      "default": "agave://data-tacc-work-wallen/sd2e/sample/proteowizard/small.RAW",
+      "required": false,
+      "visible": true
+    },
+    "details": {
+      "description": "The raw file input. Specify either this or a directory.",
+      "label": "Input file"
+    }
+  },
+  {
+    "id": "raw_directory",
+    "value": {
+      "default": "agave://data-tacc-work-wallen/sd2e/sample/proteowizard/TestFolderMgfs",
+      "required": false,
+      "visible": true
+    },
+    "details": {
+      "description": "The directory containing the raw files. Specify either this or a single file.",
+      "label": "Input directory",
+      "argument": "-f ",
+      "showArgument": true
+    }
+  }
+  ],
   "parameters": [{
     "id": "CONTAINER_IMAGE",
     "value": {
-      "default": "{{ docker.organization }}/{{ docker.repo }}:{{ docker.tag }}",
+      "default": "{{ docker.username }}/{{ docker.repo }}:{{ docker.tag }}",
       "description": "Container Image. Do not edit.",
       "type": "string",
       "visible": false,
       "required": true
     }
-  }],
+  },
+  {
+    "id": "out_file",
+    "value": {
+      "default": "output.mzML",
+      "type": "string",
+      "visible": true,
+      "required": false
+    },
+    "details": {
+      "description": "The output file. Specify either this or an output directory.",
+      "label": "Output file",
+      "argument": "--outfile ",
+      "showArgument": true
+    }
+  },
+  {
+    "id": "out_directory",
+    "value": {
+      "default": "output",
+      "type": "string",
+      "visible": true,
+      "required": false
+    },
+    "details": {
+      "description": "The output directory. Specify either this or an output file.",
+      "label": "Output directory"
+    }
+  },
+  {
+    "id": "format",
+    "value": {
+      "default": "mzML",
+      "type": "string",
+      "visible": true,
+      "required": false
+    },
+    "details": {
+      "description": "The spectra output format. Options are mzML, mzXML, mz5, mgf, text, ms1, cms1, ms2, cms2.",
+      "label": "Output format",
+      "argument": "--",
+      "showArgument": true
+    }
+  }
+  ],
   "outputs": []
 }

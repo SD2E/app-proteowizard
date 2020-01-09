@@ -17,4 +17,45 @@ fi
 #   Example: docker run centos:7 uname -a
 #            container_exec centos:7 uname -a
 
-container_exec ${CONTAINER_IMAGE}
+COMMAND=" msconvert "
+PARAMS=" "
+
+if [ -n "${raw_file}" ];
+then
+	PARAMS="${PARAMS} ${raw_file} "
+
+elif [ -n "${raw_directory}" ];
+then
+  ls ${raw_directory} > filelist.txt
+  mv filelist.txt ${raw_directory}/
+	PARAMS="${PARAMS} -f ${raw_directory}/filelist.txt "
+
+else
+	echo "Error: must specify either an input file or input directory"
+	return 1
+fi
+
+
+if [ -n "${out_file}" ];
+then
+	PARAMS="${PARAMS} ${out_file} "
+
+elif [ -n "${out_directory}" ];
+then
+	PARAMS="${PARAMS} -o ${out_directory} "
+	mkdir -p ${out_directory}
+
+else
+	echo "Error: must specify either an output file or output directory"
+	return 1
+fi
+
+if [ -n "${format}" ];
+then
+	PARAMS="${PARAMS} ${format} "
+else
+	PARAMS="${PARAMS} --mzML "
+fi
+
+#mkdir -p ./output/
+container_exec ${CONTAINER_IMAGE} ${COMMAND} ${PARAMS}

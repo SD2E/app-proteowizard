@@ -17,6 +17,7 @@ fi
 #   Example: docker run centos:7 uname -a
 #            container_exec centos:7 uname -a
 
+export LC_ALL=C
 COMMAND=" msconvert "
 PARAMS=" "
 
@@ -26,9 +27,8 @@ then
 
 elif [ -n "${raw_directory}" ];
 then
-  ls ${raw_directory} > filelist.txt
-  mv filelist.txt ${raw_directory}/
-	PARAMS="${PARAMS} -f ${raw_directory}/filelist.txt "
+	find ${raw_directory} -type f > filelist.txt
+	PARAMS="${PARAMS} -f filelist.txt "
 
 else
 	echo "Error: must specify either an input file or input directory"

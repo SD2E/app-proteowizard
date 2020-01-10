@@ -1,0 +1,29 @@
+{
+  "name":"wallen-proteowizard test-job1",
+  "appId": "wallen-proteowizard-3.0.20009",
+  "archive": false,
+  "inputs": {
+    "raw_file": "agave://data-tacc-work-wallen/sd2e/sample/proteowizard/small.mzML"
+  },
+  "parameters": {
+    "out_file": "output.mgf",
+    "format": "mgf"
+  },
+  "notifications": [
+    {
+      "url":"https://requestbin.agaveapi.co/?job_id=${JOB_ID}&status=${JOB_STATUS}",
+      "event":"*",
+      "persistent":true
+    },
+    {
+      "url":"wallen@tacc.utexas.edu",
+      "event":"FINISHED",
+          "persistent":false
+    },
+    {
+      "url":"wallen@tacc.utexas.edu",
+      "event":"FAILED",
+      "persistent":false
+    }
+  ]
+}

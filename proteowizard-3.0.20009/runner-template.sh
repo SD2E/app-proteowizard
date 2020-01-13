@@ -32,13 +32,13 @@ then
 
 else
 	echo "Error: must specify either an input file or input directory"
-	return 1
+	exit
 fi
 
 
 if [ -n "${out_file}" ];
 then
-	PARAMS="${PARAMS} ${out_file} "
+	PARAMS="${PARAMS} --outfile ${out_file} "
 
 elif [ -n "${out_directory}" ];
 then
@@ -47,15 +47,21 @@ then
 
 else
 	echo "Error: must specify either an output file or output directory"
-	return 1
+	exit
 fi
 
 if [ -n "${format}" ];
 then
-	PARAMS="${PARAMS} ${format} "
+	echo "format is non-zero with a value of ${format}"
+	PARAMS="${PARAMS} --${format} "
 else
 	PARAMS="${PARAMS} --mzML "
 fi
 
 #mkdir -p ./output/
+
+echo "================================================================"
+echo "COMMAND = container_exec ${CONTAINER_IMAGE} ${COMMAND} ${PARAMS}"
+echo "================================================================"
+
 container_exec ${CONTAINER_IMAGE} ${COMMAND} ${PARAMS}
